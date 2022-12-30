@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from sqlite_utils.db import Database, Table
 
@@ -102,7 +102,7 @@ def save_pages(db: Database, pages: List[Dict[str, Any]]):
 def transform_block(
     block: Dict[str, Any],
     page_uid: str,
-    parent_uid: str = None,
+    parent_uid: Optional[str] = None,
 ):
     """
     Transformer a Roam Research block, so it can be safely saved to the SQLite
@@ -123,35 +123,32 @@ def transform_block(
     block["parent_uid"] = parent_uid
 
 
-def flatten_page_block_hierarchy(
-    page: Dict[str, Any],
+def flatten_block_hierarchy(
+    children: List[Dict[str, Any]],
     page_uid: str,
-    parent_uid: str = None,
+    parent_uid: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     Flatten a Roam Research page block hierarchy's structure.
     """
-    children = []
+    _children: List[Dict[str, Any]] = []
 
-    if "children" not in page:
-        return children
-
-    for child in page["children"]:
+    for child in children:
         child["page_uid"] = page_uid
         child["parent_uid"] = parent_uid
 
-        if "children" in child:
-            children.extend(
-                flatten_page_block_hierarchy(
-                    child,
+        _children.append(child)
+
+        if "children" in child and len(child["children"]) > 0:
+            _children.extend(
+                flatten_block_hierarchy(
+                    child["children"],
                     page_uid=page_uid,
                     parent_uid=child["uid"],
                 )
             )
-        else:
-            children.append(child)
 
-    return children
+    return _children
 
 
 def save_blocks(db: Database, pages: List[Dict[str, Any]]):
@@ -163,7 +160,10 @@ def save_blocks(db: Database, pages: List[Dict[str, Any]]):
 
     blocks = []
     for page in pages:
-        blocks.extend(flatten_page_block_hierarchy(page, page_uid=page["uid"]))
+        if "children" in page and len(page["children"]) > 0:
+            blocks.extend(
+                flatten_block_hierarchy(page["children"], page_uid=page["uid"])
+            )
 
     logger.info(f"Found {len(blocks)} blocks to import.")
 
