@@ -11,11 +11,18 @@ packages = [{include = "roam_research_to_sqlite"}]
 python = "^3.9"
 sqlite-utils = "^3.30"
 click = "^8.1.3"
+edn-format = "^0.7.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
 isort = "^5.11.4"
 pytest = "^7.2.0"
+
+[tool.poetry.scripts]
+roam-research-to-sqlite = "roam_research_to_sqlite.cli:cli"
+
+[tool.black]
+line-length = 80
 
 [build-system]
 requires = ["poetry-core"]
