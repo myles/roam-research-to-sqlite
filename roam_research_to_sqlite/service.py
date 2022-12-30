@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from sqlite_utils.db import Database, Table
 
@@ -160,9 +160,9 @@ def save_blocks(db: Database, pages: List[Dict[str, Any]]):
 
     blocks = []
     for page in pages:
-        if 'children' in page and len(page['children']) > 0:
-            blocks.extend(flatten_block_hierarchy(
-                page["children"], page_uid=page["uid"])
+        if "children" in page and len(page["children"]) > 0:
+            blocks.extend(
+                flatten_block_hierarchy(page["children"], page_uid=page["uid"])
             )
 
     logger.info(f"Found {len(blocks)} blocks to import.")

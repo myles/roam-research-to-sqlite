@@ -24,12 +24,6 @@ roam-research-to-sqlite = "roam_research_to_sqlite.cli:cli"
 [tool.black]
 line-length = 80
 
-[tool.poetry.scripts]
-roam-research-to-sqlite = "roam_research_to_sqlite.cli:cli"
-
-[tool.black]
-line-length = 80
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

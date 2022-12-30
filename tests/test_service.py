@@ -1,4 +1,5 @@
 from roam_research_to_sqlite import service
+
 from . import fixtures
 
 
@@ -40,7 +41,7 @@ def test_flatten_block_hierarchy():
     block_child_one = fixtures.BLOCK_TWO_CHILD_ONE.copy()
     block_child_two = fixtures.BLOCK_TWO_CHILD_TWO.copy()
 
-    block['children'] = [block_child_one, block_child_two]
+    block["children"] = [block_child_one, block_child_two]
 
     flatten_blocks = service.flatten_block_hierarchy(
         children=[block],
