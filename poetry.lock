@@ -98,23 +98,6 @@ files = [
 ]
 
 [[package]]
-name = "edn-format"
-version = "0.7.5"
-description = "EDN format reader and writer in Python"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "edn_format-0.7.5-py3-none-any.whl", hash = "sha256:3752c6bd50d39c60f767da9fde7619133a8b3f9217dcdcbd52b9e2e1b7bbb045"},
-    {file = "edn_format-0.7.5.tar.gz", hash = "sha256:05a4b3078def5e4bb07ed58fb48c2aef52f3db019489dc2845808a5ae990c80e"},
-]
-
-[package.dependencies]
-ply = ">=3.10"
-pyRFC3339 = ">=0.2"
-pytz = ">=2016.10"
-
-[[package]]
 name = "exceptiongroup"
 version = "1.1.0"
 description = "Backport of PEP 654 (exception groups)"
@@ -228,33 +211,6 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
-name = "ply"
-version = "3.11"
-description = "Python Lex & Yacc"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
-    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
-]
-
-[[package]]
-name = "pyrfc3339"
-version = "1.1"
-description = "Generate and parse RFC 3339 timestamps"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pyRFC3339-1.1-py2.py3-none-any.whl", hash = "sha256:67196cb83b470709c580bb4738b83165e67c6cc60e1f2e4f286cfcb402a926f4"},
-    {file = "pyRFC3339-1.1.tar.gz", hash = "sha256:81b8cbe1519cdb79bed04910dd6fa4e181faf8c88dff1e1b987b5f7ab23a5b1a"},
-]
-
-[package.dependencies]
-pytz = "*"
-
-[[package]]
 name = "pytest"
 version = "7.2.0"
 description = "pytest: simple powerful testing with Python"
@@ -292,18 +248,6 @@ files = [
 
 [package.dependencies]
 six = ">=1.5"
-
-[[package]]
-name = "pytz"
-version = "2022.7"
-description = "World timezone definitions, modern and historical"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pytz-2022.7-py2.py3-none-any.whl", hash = "sha256:93007def75ae22f7cd991c84e02d434876818661f8df9ad5df9e950ff4e52cfd"},
-    {file = "pytz-2022.7.tar.gz", hash = "sha256:7ccfae7b4b2c067464a6733c6261673fdb8fd1be905460396b97a073e9fa683a"},
-]
 
 [[package]]
 name = "six"
@@ -399,4 +343,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9b928b019a27d2abe9ca8d319df4a5806d7613ca5bb75cb994b74ddc0b2b02e0"
+content-hash = "3d74a463f1c933b602f7c593d76956b0f581d08f7bb4d10aad4797ab4eb67e95"

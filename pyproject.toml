@@ -11,7 +11,6 @@ packages = [{include = "roam_research_to_sqlite"}]
 python = "^3.9"
 sqlite-utils = "^3.30"
 click = "^8.1.3"
-edn-format = "^0.7.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
