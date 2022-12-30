@@ -1,8 +1,10 @@
-from pathlib import Path
-from zipfile import ZipFile
-import click
 import json
 import logging
+from pathlib import Path
+from zipfile import ZipFile
+
+import click
+
 from . import service
 
 
@@ -17,7 +19,7 @@ from . import service
     type=click.Path(file_okay=True, dir_okay=False, allow_dash=False),
     required=True,
 )
-@click.option('-v', '--verbose', count=True)
+@click.option("-v", "--verbose", count=True)
 @click.version_option()
 def cli(db_path, roam_export_path, verbose):
     """
@@ -29,8 +31,10 @@ def cli(db_path, roam_export_path, verbose):
     db = service.open_database(db_path)
 
     roam_export_path = Path(roam_export_path)
-    with ZipFile(roam_export_path, 'r') as zip_file_obj:
-        file_name = [name for name in zip_file_obj.namelist() if name.endswith(".json")][0]
+    with ZipFile(roam_export_path, "r") as zip_file_obj:
+        file_name = [
+            name for name in zip_file_obj.namelist() if name.endswith(".json")
+        ][0]
         raw_pages = zip_file_obj.read(file_name)
 
     pages_one = json.loads(raw_pages)
