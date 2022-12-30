@@ -52,7 +52,7 @@ jobs:
       - id: run-test
         name: Run tests 🧪
         run: |
-          poetry run pytest --cov=roam_research_to_sqlite
+          poetry run pytest ./tests/
 
       - id: run-linters
         name: Run linters 🚨
