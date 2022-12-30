@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Optional, Any, Dict, List
 
 from sqlite_utils.db import Database, Table
 
@@ -102,7 +102,7 @@ def save_pages(db: Database, pages: List[Dict[str, Any]]):
 def transform_block(
     block: Dict[str, Any],
     page_uid: str,
-    parent_uid: str = None,
+    parent_uid: Optional[str] = None,
 ):
     """
     Transformer a Roam Research block, so it can be safely saved to the SQLite
@@ -126,12 +126,12 @@ def transform_block(
 def flatten_page_block_hierarchy(
     page: Dict[str, Any],
     page_uid: str,
-    parent_uid: str = None,
+    parent_uid: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     Flatten a Roam Research page block hierarchy's structure.
     """
-    children = []
+    children: List[Dict[str, Any]] = []
 
     if "children" not in page:
         return children
