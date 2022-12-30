@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "roam-research-to-sqlite"
+version = "0.1.0"
+description = "Save data from Roam Research's backup file to a SQLite database."
+authors = ["Myles Braithwaite <me@mylesbraithwaite.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "roam_research_to_sqlite"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sqlite-utils = "^3.30"
+click = "^8.1.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.12.0"
+isort = "^5.11.4"
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
