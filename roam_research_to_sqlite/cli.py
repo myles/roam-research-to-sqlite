@@ -37,8 +37,5 @@ def cli(db_path, roam_export_path, verbose):
         ][0]
         raw_pages = zip_file_obj.read(file_name)
 
-    pages_one = json.loads(raw_pages)
-    pages_two = json.loads(raw_pages)
-
-    service.save_pages(db, pages_one)
-    service.save_blocks(db, pages_two)
+    service.save_pages(db, json.loads(raw_pages))
+    service.save_blocks(db, json.loads(raw_pages))

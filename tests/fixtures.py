@@ -1,3 +1,5 @@
+# ruff: noqa: E501
+
 BLOCK_ONE = {
     "string": "__Myles.Wiki__ is my public [[Commonplace Book]], it takes the contents of [[Wiki Sidebar]] and publishes them for others to see.",
     "create-time": 1646717989531,
@@ -1403,6 +1405,35 @@ PAGE_THREE = {
     ],
     "uid": "6e9iXvnoV",
     "edit-time": 1644433408966,
+    ":edit/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
+}
+
+DAILY_NOTE_PAGE = {
+    "create-time": 1684196441818,
+    "title": "May 15th, 2023",
+    ":create/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
+    ":log/id": 1684196441817,
+    "children": [
+        {
+            "string": "Hello, World!",
+            "uid": "8oIBZ4uNW",
+            "create-time": 1684196447241,
+            "edit-time": 1684196451610,
+            ":create/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
+            ":edit/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
+        }
+    ],
+    "uid": "05-15-2023",
+    "edit-time": 1684196441818,
+    ":edit/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
+}
+
+USER_PAGE = {
+    "uid": "B-ltsPPpS",
+    "create-time": 1684196441809,
+    "edit-time": 1684196441809,
+    "title": "Anonymous",
+    ":create/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
     ":edit/user": {":user/uid": "dVUi6J6XIea0FheVrBJjChtcOID2"},
 }
 

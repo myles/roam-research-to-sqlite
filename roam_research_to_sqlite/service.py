@@ -1,4 +1,7 @@
+import calendar
+import datetime
 import logging
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -34,6 +37,8 @@ def build_database(db: Database):
             columns={
                 "uid": str,
                 "title": str,
+                "is_daily_note": bool,
+                "daily_note_date": datetime.date,
                 "create_time": int,
                 "edit_time": int,
             },
@@ -65,18 +70,50 @@ def build_database(db: Database):
         blocks_table.create_index(["parent_uid"])
 
 
+RE_DAILY_LOG = re.compile(
+    r"^(?P<month>\w+) (?P<day>\d{1,2})(st|nd|rd|th), (?P<year>\d{4})$"
+)
+
+
+def extract_daily_note_date(title: str) -> Optional[datetime.date]:
+    """
+    Check if a Roam Research page is a daily note.
+    """
+    match = RE_DAILY_LOG.match(title)
+
+    if match is None:
+        return None
+
+    month = list(calendar.month_name).index(match["month"])
+
+    return datetime.date(int(match["year"]), month, int(match["day"]))
+
+
 def transform_page(page: Dict[str, Any]):
     """
     Transformer a Roam Research page, so it can be safely saved to the SQLite
     database.
     """
+    daily_note_date = extract_daily_note_date(page.get("title", ""))
+
+    page["is_daily_note"] = daily_note_date is not None
+    page["daily_note_date"] = daily_note_date
+
     page["create_time"] = page.pop("create-time")
     page["edit_time"] = page.pop("edit-time")
 
     to_remove = [
         k
         for k in page.keys()
-        if k not in ("uid", "title", "create_time", "edit_time")
+        if k
+        not in (
+            "uid",
+            "title",
+            "is_daily_note",
+            "daily_note_date",
+            "create_time",
+            "edit_time",
+        )
     ]
     for key in to_remove:
         del page[key]
@@ -94,7 +131,7 @@ def save_pages(db: Database, pages: List[Dict[str, Any]]):
     for page in pages:
         transform_page(page)
 
-    pages_table.insert_all(pages, pk="uid", alter=True, replace=True)
+    pages_table.upsert_all(pages, pk="uid")
 
     logger.info(f"Saved {pages_table.count} rows into the pages table.")
 
@@ -174,6 +211,6 @@ def save_blocks(db: Database, pages: List[Dict[str, Any]]):
             parent_uid=block.get("parent_id", None),
         )
 
-    blocks_table.insert_all(blocks, pk="uid", alter=True, replace=True)
+    blocks_table.upsert_all(blocks, pk="uid")
 
     logger.info(f"Saved {blocks_table.count} rows into the blocks table.")
