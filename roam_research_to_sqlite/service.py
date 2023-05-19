@@ -61,8 +61,8 @@ def build_database(db: Database):
             pk="uid",
             foreign_keys=(
                 ("page_uid", "pages", "uid"),
-                ("parent_uid", "blocks", "uid")
-            )
+                ("parent_uid", "blocks", "uid"),
+            ),
         )
         blocks_table.enable_fts(["string"], create_triggers=True)
 
@@ -98,7 +98,9 @@ def transform_page(page: Dict[str, Any]):
     Transformer a Roam Research page, so it can be safely saved to the SQLite
     database.
     """
-    page["daily_note_date"] = transform_daily_note_uid_to_date(page.get("uid", ""))
+    page["daily_note_date"] = transform_daily_note_uid_to_date(
+        page.get("uid", "")
+    )
     page["create_time"] = transform_time(page.pop("create-time"))
     page["edit_time"] = transform_time(page.pop("edit-time"))
 
