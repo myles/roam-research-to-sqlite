@@ -40,7 +40,6 @@ def test_transform_page():
     assert page == {
         "uid": fixtures.PAGE_ONE["uid"],
         "title": fixtures.PAGE_ONE["title"],
-        "is_daily_note": False,
         "daily_note_date": None,
         "create_time": service.transform_time(fixtures.PAGE_ONE["create-time"]),
         "edit_time": service.transform_time(fixtures.PAGE_ONE["edit-time"]),

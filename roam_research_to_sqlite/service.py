@@ -111,7 +111,6 @@ def transform_page(page: Dict[str, Any]):
         not in (
             "uid",
             "title",
-            "is_daily_note",
             "daily_note_date",
             "create_time",
             "edit_time",
