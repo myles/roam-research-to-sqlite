@@ -1,7 +1,5 @@
-import calendar
 import datetime
 import logging
-import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -37,14 +35,17 @@ def build_database(db: Database):
             columns={
                 "uid": str,
                 "title": str,
-                "is_daily_note": bool,
-                "daily_note_date": datetime.date,
-                "create_time": int,
-                "edit_time": int,
+                "daily_note_date": Optional[datetime.date],
+                "create_time": datetime.datetime,
+                "edit_time": datetime.datetime,
             },
             pk="uid",
         )
         pages_table.enable_fts(["title"], create_triggers=True)
+
+    pages_table_indexes = {tuple(i.columns) for i in pages_table.indexes}
+    if ("daily_note_date",) not in pages_table_indexes:
+        blocks_table.create_index(["daily_note_date"])
 
     if blocks_table.exists() is False:
         logger.info("Building the blocks table.")
@@ -54,14 +55,16 @@ def build_database(db: Database):
                 "page_uid": str,
                 "parent_uid": str,
                 "string": str,
-                "create_time": int,
-                "edit_time": int,
+                "create_time": datetime.datetime,
+                "edit_time": datetime.datetime,
             },
             pk="uid",
+            foreign_keys=(
+                ("page_uid", "pages", "uid"),
+                ("parent_uid", "blocks", "uid")
+            )
         )
         blocks_table.enable_fts(["string"], create_triggers=True)
-        blocks_table.add_foreign_key("page_uid", "pages", "uid")
-        blocks_table.add_foreign_key("parent_uid", "blocks", "uid")
 
     blocks_table_indexes = {tuple(i.columns) for i in blocks_table.indexes}
     if ("page_uid",) not in blocks_table_indexes:
@@ -70,23 +73,24 @@ def build_database(db: Database):
         blocks_table.create_index(["parent_uid"])
 
 
-RE_DAILY_LOG = re.compile(
-    r"^(?P<month>\w+) (?P<day>\d{1,2})(st|nd|rd|th), (?P<year>\d{4})$"
-)
-
-
-def extract_daily_note_date(title: str) -> Optional[datetime.date]:
+def transform_daily_note_uid_to_date(uid: str) -> Optional[datetime.date]:
     """
-    Check if a Roam Research page is a daily note.
+    Transform a Roam Research daily note page's UID into a date object.
     """
-    match = RE_DAILY_LOG.match(title)
-
-    if match is None:
+    try:
+        return datetime.datetime.strptime(uid, "%m-%d-%Y").date()
+    except ValueError:
         return None
 
-    month = list(calendar.month_name).index(match["month"])
 
-    return datetime.date(int(match["year"]), month, int(match["day"]))
+def transform_time(value: Optional[int]) -> Optional[datetime.datetime]:
+    """
+    Transform a Roam Research time value into a datetime object.
+    """
+    if value is None:
+        return None
+
+    return datetime.datetime.fromtimestamp(value / 1000)
 
 
 def transform_page(page: Dict[str, Any]):
@@ -94,13 +98,9 @@ def transform_page(page: Dict[str, Any]):
     Transformer a Roam Research page, so it can be safely saved to the SQLite
     database.
     """
-    daily_note_date = extract_daily_note_date(page.get("title", ""))
-
-    page["is_daily_note"] = daily_note_date is not None
-    page["daily_note_date"] = daily_note_date
-
-    page["create_time"] = page.pop("create-time")
-    page["edit_time"] = page.pop("edit-time")
+    page["daily_note_date"] = transform_daily_note_uid_to_date(page.get("uid", ""))
+    page["create_time"] = transform_time(page.pop("create-time"))
+    page["edit_time"] = transform_time(page.pop("edit-time"))
 
     to_remove = [
         k
@@ -145,8 +145,8 @@ def transform_block(
     Transformer a Roam Research block, so it can be safely saved to the SQLite
     database.
     """
-    block["create_time"] = block.pop("create-time", None)
-    block["edit_time"] = block.pop("edit-time", None)
+    block["create_time"] = transform_time(block.pop("create-time", None))
+    block["edit_time"] = transform_time(block.pop("edit-time", None))
 
     to_remove = [
         k

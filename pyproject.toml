@@ -10,7 +10,7 @@ packages = [{include = "roam_research_to_sqlite"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 click = "^8.1.3"
-sqlite-utils = "^3.30"
+sqlite-utils = "^3.31"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
@@ -19,6 +19,9 @@ mypy = "^0.991"
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 ruff = "^0.0.267"
+
+[tool.poetry.group.datasette.dependencies]
+datasette = "^0.64.3"
 
 [tool.poetry.scripts]
 roam-research-to-sqlite = "roam_research_to_sqlite.cli:cli"

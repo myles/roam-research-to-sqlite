@@ -10,45 +10,25 @@ from . import fixtures
 @pytest.mark.parametrize(
     "value, expected_result",
     (
-        (
-            "January 1st, 2022",
-            {"month": "January", "day": "1", "year": "2022"},
-        ),
-        (
-            "January 2nd, 2022",
-            {"month": "January", "day": "2", "year": "2022"},
-        ),
-        (
-            "January 3rd, 2022",
-            {"month": "January", "day": "3", "year": "2022"},
-        ),
-        (
-            "January 4th, 2022",
-            {"month": "January", "day": "4", "year": "2022"},
-        ),
+        ("04-21-2016", datetime.date(2016, 4, 21)),
+        ("MgQl_S_b8", None),
+        ("6BVU5tCTI", None),
     ),
 )
-def test_re_daily_log(value, expected_result):
-    result = service.RE_DAILY_LOG.match(value)
-
-    assert result is not None
-    assert result.groupdict() == expected_result
+def test_transform_daily_note_uid_to_date(value, expected_result):
+    result = service.transform_daily_note_uid_to_date(value)
+    assert result == expected_result
 
 
 @pytest.mark.parametrize(
     "value, expected_result",
     (
-        ("January 1st, 2022", datetime.date(2022, 1, 1)),
-        ("January 2nd, 2022", datetime.date(2022, 1, 2)),
-        ("January 3rd, 2022", datetime.date(2022, 1, 3)),
-        ("January 4th, 2022", datetime.date(2022, 1, 4)),
-        ("January 2022", None),
-        ("Hello, World!", None),
+        (None, None),
+        (1461244800000, datetime.datetime(2016, 4, 21, 9, 20)),
     ),
 )
-def test_extract_daily_note_date(value, expected_result):
-    result = service.extract_daily_note_date(value)
-
+def test_transform_time(value, expected_result):
+    result = service.transform_time(value)
     assert result == expected_result
 
 
@@ -62,8 +42,8 @@ def test_transform_page():
         "title": fixtures.PAGE_ONE["title"],
         "is_daily_note": False,
         "daily_note_date": None,
-        "create_time": fixtures.PAGE_ONE["create-time"],
-        "edit_time": fixtures.PAGE_ONE["edit-time"],
+        "create_time": service.transform_time(fixtures.PAGE_ONE["create-time"]),
+        "edit_time": service.transform_time(fixtures.PAGE_ONE["edit-time"]),
     }
 
 
@@ -75,10 +55,13 @@ def test_transform_page__daily_note():
     assert page == {
         "uid": fixtures.DAILY_NOTE_PAGE["uid"],
         "title": fixtures.DAILY_NOTE_PAGE["title"],
-        "is_daily_note": True,
         "daily_note_date": datetime.date(2023, 5, 15),
-        "create_time": fixtures.DAILY_NOTE_PAGE["create-time"],
-        "edit_time": fixtures.DAILY_NOTE_PAGE["edit-time"],
+        "create_time": service.transform_time(
+            fixtures.DAILY_NOTE_PAGE["create-time"]
+        ),
+        "edit_time": service.transform_time(
+            fixtures.DAILY_NOTE_PAGE["edit-time"]
+        ),
     }
 
 
@@ -92,8 +75,10 @@ def test_transform_block():
     assert block == {
         "uid": fixtures.BLOCK_ONE["uid"],
         "string": fixtures.BLOCK_ONE["string"],
-        "create_time": fixtures.BLOCK_ONE["create-time"],
-        "edit_time": fixtures.BLOCK_ONE["edit-time"],
+        "create_time": service.transform_time(
+            fixtures.BLOCK_ONE["create-time"]
+        ),
+        "edit_time": service.transform_time(fixtures.BLOCK_ONE["edit-time"]),
         "page_uid": page_uid,
         "parent_uid": parent_uid,
     }
